@@ -1,0 +1,44 @@
+server:
+  port: 8084
+  error:
+    include-message: always
+
+spring:
+  application:
+    name: ms-barriodigital-audit
+
+  datasource:
+    url: jdbc:postgresql://ep-shy-glade-acs6skul-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+    username: neondb_owner
+    password: npg_Pmh8aYoxHne3
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    consumer:
+      group-id: audit-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.value.default.type: "com.barriodigital.demo.dto.KafkaAuditEventDto"
+        spring.json.use.type.headers: false
+
+# Habilitar Actuator Health Check
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
