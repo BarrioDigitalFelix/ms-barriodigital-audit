@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - creando_pipeline
 
 env:
   AWS_REGION: us-east-1
