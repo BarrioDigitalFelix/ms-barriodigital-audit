@@ -44,7 +44,7 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Desplegar en la Instancia EC2 mediante SSH
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
@@ -53,5 +53,5 @@ jobs:
             aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 726357411862.dkr.ecr.us-east-1.amazonaws.com
             cd ~/app
             docker compose -f docker-compose.prod.yml pull ${{ env.REPO_NAME }}
-            docker compose -f docker-compose.prod.yml up -d --no-deps ${{ env.REPO_NAME }}
+            docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate ${{ env.REPO_NAME }}
             docker image prune -f
