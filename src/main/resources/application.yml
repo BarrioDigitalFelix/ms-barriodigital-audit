@@ -43,6 +43,3 @@ management:
     health:
       show-details: always
 
-# Propiedad personalizada para validación de despliegue en CI/CD
-test:
-  pipeline: "VERSION_2.0_EXITOSA"
