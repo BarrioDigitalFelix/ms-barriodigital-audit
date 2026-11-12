@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - creando_pipeline
+      - 1nuevas_integraciones_kafka
 
 env:
   AWS_REGION: us-east-1
