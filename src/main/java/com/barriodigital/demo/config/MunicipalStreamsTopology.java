@@ -58,14 +58,14 @@ public class MunicipalStreamsTopology {
         String newStatus = event.getNewStatus();
         String oldStatus = event.getOldStatus();
 
-        // Caso 1: Salto irregular de flujo (llega a EN_TERRENO o RESUELTO sin haber pasado por ADMITIDO)
-        boolean saltoIrregular = ("EN_TERRENO".equals(newStatus) || "RESUELTO".equals(newStatus))
-                && !"ADMITIDO".equals(oldStatus) && !"EN_TERRENO".equals(oldStatus);
+        // Caso 1: Salto irregular (pasa directo desde INGRESADO a EN_GESTION o RESUELTO sin ser ADMITIDO)
+        boolean saltoIrregular = ("EN_GESTION".equals(newStatus) || "RESUELTO".equals(newStatus))
+                && "INGRESADO".equals(oldStatus);
 
-        // Caso 2: Rechazo de trámite ciudadano (requiere revisión de contraloría)
+        // Caso 2: Rechazo de trámite ciudadano
         boolean tramiteRechazado = "RECHAZADO".equals(newStatus);
 
-        // Caso 3: Resolución final de trámite (hito de cierre operativo)
+        // Caso 3: Resolución final de trámite
         boolean tramiteResuelto = "RESUELTO".equals(newStatus);
 
         return saltoIrregular || tramiteRechazado || tramiteResuelto;
@@ -76,8 +76,8 @@ public class MunicipalStreamsTopology {
         String oldStatus = event.getOldStatus();
         String transicion = (oldStatus != null ? oldStatus : "NUEVO") + " -> " + newStatus;
 
-        boolean saltoIrregular = ("EN_TERRENO".equals(newStatus) || "RESUELTO".equals(newStatus))
-                && !"ADMITIDO".equals(oldStatus) && !"EN_TERRENO".equals(oldStatus);
+        boolean saltoIrregular = ("EN_GESTION".equals(newStatus) || "RESUELTO".equals(newStatus))
+                && "INGRESADO".equals(oldStatus);
 
         if (saltoIrregular) {
             return new MunicipalAlertDto(
